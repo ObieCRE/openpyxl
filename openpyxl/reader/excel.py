@@ -120,13 +120,14 @@ class ExcelReader:
     """
 
     def __init__(self,  fn, read_only=False, keep_vba=KEEP_VBA,
-                  data_only=False, keep_links=True):
+                  data_only=False, keep_links=True, ignore_static_files=False):
         self.archive = _validate_archive(fn)
         self.valid_files = self.archive.namelist()
         self.read_only = read_only
         self.keep_vba = keep_vba
         self.data_only = data_only
         self.keep_links = keep_links
+        self.ignore_static_files = ignore_static_files
         self.shared_strings = []
 
 
@@ -203,7 +204,13 @@ class ExcelReader:
     def read_worksheets(self):
         comment_warning = """Cell '{0}':{1} is part of a merged range but has a comment which will be removed because merged cells cannot contain any data."""
         for sheet, rel in self.parser.find_sheets():
+            print("openpyxl - loading sheet: ", sheet.name)
+
             if rel.target not in self.valid_files:
+                continue
+
+            if (self.ignore_static_files == True) and ("STATIC" in sheet.name):
+                print("openpyxl - skipping static sheet: ", sheet.name)
                 continue
 
             if "chartsheet" in rel.Type:
@@ -286,7 +293,7 @@ class ExcelReader:
 
 
 def load_workbook(filename, read_only=False, keep_vba=KEEP_VBA,
-                  data_only=False, keep_links=True):
+                  data_only=False, keep_links=True, ignore_static_files=False):
     """Open the given filename and return the workbook
 
     :param filename: the path to open or a file-like object
@@ -312,7 +319,8 @@ def load_workbook(filename, read_only=False, keep_vba=KEEP_VBA,
         and the returned workbook will be read-only.
 
     """
+
     reader = ExcelReader(filename, read_only, keep_vba,
-                        data_only, keep_links)
+                        data_only, keep_links, ignore_static_files)
     reader.read()
     return reader.wb
