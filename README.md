@@ -9,3 +9,5 @@ For example when loading a workbook you can use `ignore_static_files`
 ```py
 load_workbook(self.filename, data_only=True, ignore_static_files=True)
 ```
+
+This functionality was used to enable more efficient loading of large files [in a pycel fork](https://github.com/ObieCRE/pycel) we made
