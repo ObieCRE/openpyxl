@@ -204,7 +204,10 @@ class ExcelReader:
     def read_worksheets(self):
         comment_warning = """Cell '{0}':{1} is part of a merged range but has a comment which will be removed because merged cells cannot contain any data."""
         for sheet, rel in self.parser.find_sheets():
-            print("openpyxl - loading sheet: ", sheet.name)
+            if (self.read_only ):
+                print("openpyxl - loading sheet (READONLY): ", sheet.name)
+            else:
+                print("openpyxl - loading sheet: ", sheet.name)
 
             if rel.target not in self.valid_files:
                 continue
