@@ -1,7 +1,7 @@
 AUTHORS.rst
 LICENCE.rst
 MANIFEST.in
-README.rst
+README.md
 setup.cfg
 setup.py
 openpyxl/__init__.py
